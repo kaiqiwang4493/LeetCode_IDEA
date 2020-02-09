@@ -1,6 +1,7 @@
 package parctices;
 
 import java.util.*;
+import java.lang.StringBuilder;
 
 public class Array {
     /*
@@ -73,4 +74,37 @@ public class Array {
        return result;
     }
 
+
+    /*
+    3 Sum
+    Determine if there exists three elements in a given array that sum to the given target number.
+    Return all the triple of values that sums to target.
+     */
+
+
+    /*
+    Given a string, we can insert at most one empty space between each pair of adjacent letters.
+     */
+
+    public void printPermutations(String str){
+        if(str.length() == 0){
+            return;
+        }
+       StringBuilder builder = new StringBuilder(str);
+        printPermutationsHelper(builder, 1, builder.length(), 0);
+    }
+
+    private void printPermutationsHelper(StringBuilder builder, int position, int length, int time){
+        if(time >= length - 1){
+            if(builder.charAt(builder.length() - 1) != '_'){
+                System.out.println(builder.toString());
+            }
+            return;
+        }
+
+        builder.insert(position, "_");
+        printPermutationsHelper(builder, position + 2,length, time + 1);
+        builder.deleteCharAt(position);
+        printPermutationsHelper(builder, position + 1,length, time + 1);
+    }
 }

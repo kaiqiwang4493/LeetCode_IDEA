@@ -103,6 +103,9 @@ public class Array {
         }
 
         builder.insert(position, "_");
+        // caution  the left and right way have different strategy to solve the problem.
+        //left is + 2
+        //right is + 1
         printPermutationsHelper(builder, position + 2,length, time + 1);
         builder.deleteCharAt(position);
         printPermutationsHelper(builder, position + 1,length, time + 1);

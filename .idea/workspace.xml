@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9da7073-2b6e-4595-b57a-c3b104129590" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/parctices/BinarySearch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dataStructure/LinkNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/parctices/LinkList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parctices/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parctices/Array.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +83,7 @@
       <workItem from="1581121245171" duration="1346000" />
       <workItem from="1581207053582" duration="3307000" />
       <workItem from="1581657561072" duration="1370000" />
+      <workItem from="1582323953878" duration="1129000" />
     </task>
     <servers />
   </component>

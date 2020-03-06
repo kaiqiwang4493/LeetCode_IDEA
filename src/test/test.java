@@ -10,10 +10,9 @@ import java.util.List;
 public class test {
     public static void main(String[] args) {
 
-        int array[] = {5,4,3,2,6};
-        StringQuestion sq = new StringQuestion();
-        int result = sq.MinSubSum(array, 9);
-        System.out.println(result);
+       String string = "bb";
+       StringQuestion sq = new StringQuestion();
+       System.out.println(sq.longest(string));
 
 
 //

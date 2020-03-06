@@ -93,7 +93,7 @@ public class StringQuestion {
     /*
     Minimum size subarray sum
      */
-        public int MinSubSum(int[] array, int target){
+    public int MinSubSum(int[] array, int target){
             if(array.length == 0){
                 return 0;
             }
@@ -123,4 +123,39 @@ public class StringQuestion {
             }
             return result;
         }
+
+        /*
+        Longest Substring without repeating chareacters.
+
+         */
+
+        public int longest(String input){
+            if(input.length() == 1){
+                return 1;
+            }
+
+            int slow = 0;
+            int fast = 0;
+            Set<Character> set = new HashSet<>();
+            int result = 0;
+
+            while(fast < input.length()){
+                Character ch = input.charAt(fast);
+                if(!set.contains(ch)){
+                    set.add(ch);
+                    result = Math.max(result, fast - slow + 1);
+                    fast++;
+                }else{
+                    set.remove(input.charAt(slow));
+                    slow++;
+                }
+            }
+            return result;
+
+        }
+
+
+
 }
+
+

@@ -14,11 +14,11 @@ public class test {
 
         int[][] image = {{1,1,1,},{1,1,0},{1,0,1}};
         int sr = 1, sc = 1;
-        int newColor = 2;
+        int newColor = 1;
         show2Darray(image);
         System.out.println();
         BFS bfs = new BFS();
-        show2Darray(bfs.flodFill(image, sr, sc, 2));
+        show2Darray(bfs.flodFill(image, sr, sc, newColor));
 
 //       String string = "bb";
 //       StringQuestion sq = new StringQuestion();

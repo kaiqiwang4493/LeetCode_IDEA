@@ -1,9 +1,6 @@
 package test;
 
-import parctices.Array;
-import parctices.BFS;
-import parctices.DynamicProgramming;
-import parctices.StringQuestion;
+import parctices.*;
 
 import javax.management.MBeanServerFactory;
 import java.util.ArrayList;
@@ -12,13 +9,11 @@ import java.util.List;
 public class test {
     public static void main(String[] args) {
 
-        int[][] image = {{1,1,1,},{1,1,0},{1,0,1}};
-        int sr = 1, sc = 1;
-        int newColor = 1;
-        show2Darray(image);
-        System.out.println();
-        BFS bfs = new BFS();
-        show2Darray(bfs.flodFill(image, sr, sc, newColor));
+
+       DFS dfs = new DFS();
+
+       List<String> list = dfs.subSets1("abc");
+       showMethodString(list);
 
 //       String string = "bb";
 //       StringQuestion sq = new StringQuestion();
@@ -67,5 +62,11 @@ public class test {
             System.out.print(temp+", ");
         }
         System.out.println();
+    }
+
+    public static void showMethodString(List<String> list){
+        for(String temp:list){
+            System.out.println(temp);
+        }
     }
 }

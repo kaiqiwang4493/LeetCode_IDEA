@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e9da7073-2b6e-4595-b57a-c3b104129590" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/LeetCode/parctices/BFS$Solution.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/LeetCode/parctices/BFS.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LeetCode/parctices/BFS.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/LeetCode/test/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LeetCode/test/test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parctices/BFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parctices/BFS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parctices/DFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parctices/DFS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test.java" afterDir="false" />
     </list>
@@ -94,7 +94,7 @@
       <workItem from="1583462441222" duration="4635000" />
       <workItem from="1583467797944" duration="37000" />
       <workItem from="1583533060343" duration="3061000" />
-      <workItem from="1583695016892" duration="3040000" />
+      <workItem from="1583695016892" duration="4715000" />
     </task>
     <servers />
   </component>

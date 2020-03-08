@@ -7,6 +7,34 @@ import java.lang.String;
 
 
 public class DFS {
+    /* All Subset 1
+    Basic DFS - 1
+    Given a set of characters represented by a String, return a list containing all subsets of the characters.
+     */
+
+    public List<String> subSets1(String set){
+        List<String> result = new ArrayList<>();
+        if(set == null || set.length() == 0){
+            return result;
+        }
+        StringBuilder sb = new StringBuilder();
+        subSets1Helper(set, sb, result, 0);
+        return result;
+    }
+    private void subSets1Helper(String set, StringBuilder sb, List<String> result, int level){
+        if(level == set.length()){
+            result.add(sb.toString());
+            return;
+        }
+
+        sb.append(set.charAt(level));
+        subSets1Helper(set, sb,  result, level + 1);
+        sb.deleteCharAt(sb.length() - 1);
+        subSets1Helper(set, sb, result, level + 1);
+    }
+
+
+
     /*
      * All Valid Permutations Of Parentheses I
      * Basic DFS - 2

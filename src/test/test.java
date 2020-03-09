@@ -11,7 +11,7 @@ public class test {
 
 
        DFS dfs = new DFS();
-       int[] result = dfs.keepDistance(3);
+       int[] result = dfs.keepDistance(2);
         if (result != null) {
             for(int temp : result){
                 System.out.print(temp + " ");

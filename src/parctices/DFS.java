@@ -1,5 +1,6 @@
 package parctices;
 
+import java.awt.desktop.SystemEventListener;
 import java.util.*;
 import java.lang.String;
 
@@ -265,21 +266,28 @@ public class DFS {
             m++;
         }
         int[] result = null;
-        keepDistanceHelper(array, result,0,k);
-        return result;
+        return keepDistanceHelper(array, result,0,k);
     }
-    //recursion method
+    //recursion method, exit part code has problem.
     private int[] keepDistanceHelper(int[] array,int[] result, int level, int k){
         if(level == k *2){
             if(keepDistanceCheck(array, k)){
+                //caution: result just copy the head address of array list.
+                // so we cannot modify both result and array after finding correct result.
                 result = array;
+                for(int i : result){
+                    System.out.print(i + " ");
+                }
+                System.out.println();
             }
             return result;
         }
+
         for(int i = level; i < array.length; i++){
             intSwap(array, level, i);
-            keepDistanceHelper(array, result, level + 1, k);
-            if(result != null) return result;
+            result = keepDistanceHelper(array, result, level + 1, k);
+            //return result once find the correct answer.
+            if(result != null) break;
             intSwap(array, level, i);
         }
         return result;

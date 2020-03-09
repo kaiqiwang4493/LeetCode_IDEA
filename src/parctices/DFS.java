@@ -1,8 +1,6 @@
 package parctices;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.lang.String;
 
 
@@ -148,6 +146,7 @@ public class DFS {
 
     /*
     All Subsets II
+    Extend of Basic - 1
     Given a set of characters represented by a String,
     return a list containing all subsets of the characters.
     Notice that each subset returned will be sorted to remove the sequence.
@@ -185,6 +184,40 @@ public class DFS {
     }
 
 
+
+    /*
+    *All Subsets of Size K
+    *Given a set of characters represented by a String,
+    * return a list containing all subsets of the characters whose size is K.
+     */
+
+    public List<String> subSetOfSizeK(String set, int k){
+        List<String> result = new ArrayList<>();
+        if (set.length() < k) {
+            return result;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sebSetOfSizeKHelper(set, k, 0, sb, result);
+        return result;
+
+    }
+
+    private void sebSetOfSizeKHelper(String set, int k, int level, StringBuilder sb, List<String> result){
+        if(sb.length() == k || level == set.length()){
+            if(sb.length() == k){
+                result.add(new String(sb.toString()));
+                return;
+            }
+        }
+        sb.append(set.charAt(level));
+        sebSetOfSizeKHelper(set, k, level + 1, sb, result);
+        sb.deleteCharAt(sb.length() - 1);
+        sebSetOfSizeKHelper(set, k, level + 1, sb, result);
+
+    }
+
+
     /*
     Flood Fill
      */
@@ -208,5 +241,73 @@ public class DFS {
     /*
     ()()()find all valid permutation using the parenthesis provided.
      */
+
+    /*
+    *Keep Distance For Identical Elements
+    *Given an integer k, arrange the sequence of integers [1, 1, 2, 2, 3, 3, ...., k - 1, k - 1, k, k],
+    * such that the output integer array satisfy this condition: Between each two i's, they are exactly i integers
+    * k = 3, The output = { 2, 3, 1, 2, 1, 3 }.
+     */
+    /*
+    *Solution: 1.find the all combination of the origin array
+    *           2. use other method to check whether the result is legal. If legal then return result.
+     */
+
+    public int[] keepDistance(int k){
+        if(k <= 0){
+            return null;
+        }
+        int[] array = new int[k *2];
+        int m = 1;
+        for(int i = 0; i < array.length; i = i + 2){
+            array[i] = m;
+            array[i+1] = m;
+            m++;
+        }
+        int[] result = null;
+        keepDistanceHelper(array, result,0,k);
+        return result;
+    }
+    //recursion method
+    private int[] keepDistanceHelper(int[] array,int[] result, int level, int k){
+        if(level == k *2){
+            if(keepDistanceCheck(array, k)){
+                result = array;
+            }
+            return result;
+        }
+        for(int i = level; i < array.length; i++){
+            intSwap(array, level, i);
+            keepDistanceHelper(array, result, level + 1, k);
+            if(result != null) return result;
+            intSwap(array, level, i);
+        }
+        return result;
+    }
+    //check the result is or not valuable.
+    private boolean keepDistanceCheck(int[] array, int k){
+        Set<Integer> set = new HashSet<>();
+        for(int i = 1; i <= k; i++){
+            set.add(i);
+        }
+        int position = 0;
+        while(!set.isEmpty()){
+            int temp = array[position];
+            if(set.contains(temp)){
+                if(position + temp + 1>= array.length || array[position + temp + 1] != temp){
+                    return false;
+                }
+                set.remove(temp);
+            }
+            position++;
+        }
+        return true;
+    }
+    // swap for int[]
+    private void intSwap(int[] array ,int i, int k){
+        int temp = array[i];
+        array[i] = array[k];
+        array[k] = temp;
+    }
 
 }

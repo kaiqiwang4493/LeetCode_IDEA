@@ -11,9 +11,15 @@ public class test {
 
 
        DFS dfs = new DFS();
+       int[] result = dfs.keepDistance(3);
+        if (result != null) {
+            for(int temp : result){
+                System.out.print(temp + " ");
+            }
+        }else{
+            System.out.print("NULL");
+        }
 
-       List<String> list = dfs.subSets1("abc");
-       showMethodString(list);
 
 //       String string = "bb";
 //       StringQuestion sq = new StringQuestion();

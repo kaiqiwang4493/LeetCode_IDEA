@@ -318,4 +318,54 @@ public class DFS {
         array[k] = temp;
     }
 
+
+    /*
+    *Given a string with possible duplicate characters, return a list with all permutations of the characters.
+    *Set = "aba", all permutations are ["aab", "aba", "baa"]
+    * Set = “abc”, all permutations are [“abc”, “acb”, “bac”, “bca”, “cab”, “cba”]
+    * Set = "", all permutations are [""]
+    *
+    * solution : we use a set to store the permutations, and once we found a permutations same as the element
+    *             in the set, we should wipe out the permutations and it's child branch. And caution the position of code.
+    *            We check the duplicated permutation JUST at CURRENT LEVEL, instead of the final result pool.
+     */
+
+    public List<String> permutations2(String input){
+        if(input == null){
+            return null;
+        }
+        List<String> result = new ArrayList<>();
+        if(input.length() == 0){
+            return result;
+        }
+        char[] array = input.toCharArray();
+        int level = 0;
+        permutations2Helper(result, array, level);
+        return result;
+    }
+
+    private void permutations2Helper(List<String> result, char[] array, int level){
+        if(level == array.length){
+            result.add(new String(array));
+            return;
+        }
+        /*
+        Caution: the rule is just for current level, if a certain element is picked,
+        we cannot pick any of its duplicates.
+        so that we use a set to record all the distinct elements.
+         */
+        Set<Character> set = new HashSet<>();
+        for(int i = level; i<array.length; i++){
+            //.add() will return false if the value of String(array) is already in the set.
+            // we will continue swap letters if the value is not existed in the set.
+            if(set.add(array[i])){
+                swap(array, level, i);
+                permutations2Helper(result, array, level + 1);
+                swap(array, level, i);
+            }
+        }
+    }
+
+
+
 }

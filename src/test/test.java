@@ -11,14 +11,9 @@ public class test {
 
 
        DFS dfs = new DFS();
-       int[] result = dfs.keepDistance(2);
-        if (result != null) {
-            for(int temp : result){
-                System.out.print(temp + " ");
-            }
-        }else{
-            System.out.print("NULL");
-        }
+       String string = new String("aabb");
+       List<String> result = dfs.permutations2(string);
+       showMethodString(result);
 
 
 //       String string = "bb";

@@ -366,6 +366,44 @@ public class DFS {
         }
     }
 
+    /*
+    *Factor Combinations
+    *Given an integer number, return all possible combinations of the factors that can multiply to the target number.
+    *
+    * 24 = 2 x 2 x 2 x 3
+              = 2 x 2 x 6
+              = 2 x 3 x 4
+              = 2 x 12
+              = 3 x 8
+              = 4 x 6
+                your solution should return { { 2, 2, 2, 3 }, { 2, 2, 6 }, { 2, 3, 4 }, { 2, 12 }, { 3, 8 }, { 4, 6 } }
+    * The key to make sure the result without duplicate is keeping the element in the list is incremental or equal
+     */
 
+    public List<List<Integer>> factorCominations(int target){
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        if(target == 0 || target == 1){
+            return new ArrayList<>();
+        }
+        factorCominationsHelper(result, temp, 2, target);
+        return result;
+    }
+
+    private void factorCominationsHelper(List<List<Integer>> result, List<Integer> temp, int start, int target){
+        if(target == 1 && temp.size() > 1){
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+
+        for(int i = start; i <= target; i++){
+
+            if(target%i == 0){
+                temp.add(i);
+                factorCominationsHelper(result, temp,i,target/i);
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
 
 }

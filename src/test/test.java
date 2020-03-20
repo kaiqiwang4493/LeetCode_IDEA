@@ -11,9 +11,11 @@ public class test {
 
 
        DFS dfs = new DFS();
-       String string = new String("aabb");
-       List<String> result = dfs.permutations2(string);
-       showMethodString(result);
+       int input = 24;
+       List<List<Integer>>  result = dfs.factorCominations(input);
+       for(List<Integer> temp : result){
+           showMethod(temp);
+       }
 
 
 //       String string = "bb";

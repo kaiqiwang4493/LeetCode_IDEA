@@ -440,5 +440,54 @@ public class DFS {
             return true;
         }
 
+        /*
+        Restore IP address
+        solution: each layer has three branch. Each branch represents the different position of dot.
+        finlly n == 4, we need to check the rest part of number . We drop the result if the rest part number > 255.
+         */
+
+        public List<String> restoreIP(String ip){
+            if (ip.length() < 4 || ip.length() > 12){
+                return null;
+            }
+
+            StringBuilder sb = new StringBuilder(ip);
+            List<String> result = new ArrayList<>();
+            restoreIPHelper(result, sb, 0, 1);
+            return result;
+        }
+
+        private void restoreIPHelper(List<String> result, StringBuilder sb, int level, int insertPosition){
+            if(level == 3){
+                String subString = sb.substring(insertPosition - 1);
+                if(IPvaild(subString)){
+                    result.add(new String(sb.toString()));
+                }
+                return;
+            }
+
+            for(int i= insertPosition; i < insertPosition + 3 && i < sb.length(); i++){
+                sb.insert(i, ".");
+                if(IPvaild(sb.substring(insertPosition - 1, i))){
+                    restoreIPHelper(result, sb, level + 1, i + 2);
+                }
+
+                sb.deleteCharAt(i);
+            }
+        }
+
+        private boolean IPvaild(String string){
+            if(string.length() < 3){
+                return true;
+
+            }else if(string.length() == 3){
+                int result = string.compareTo("255");
+                return result <= 0;
+            }else{
+                return false;
+            }
+
+        }
+
 
 }

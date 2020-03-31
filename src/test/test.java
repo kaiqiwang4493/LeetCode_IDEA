@@ -11,10 +11,10 @@ public class test {
 
 
        DFS dfs = new DFS();
-       int input = 24;
-       List<List<Integer>>  result = dfs.factorCominations(input);
-       for(List<Integer> temp : result){
-           showMethod(temp);
+       String input = "25525511135";
+       List<String> output = dfs.restoreIP(input);
+       for(String temp : output){
+           System.out.println(temp);
        }
 
 

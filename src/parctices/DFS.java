@@ -406,4 +406,39 @@ public class DFS {
         }
     }
 
+    /*
+        N   Queen
+        Assume : N >0
+     */
+        public List<List<Integer>> nqueens(int n){
+            List<List<Integer>> result = new ArrayList<>();
+            List<Integer> cur = new ArrayList<>();
+            nqueensHelper(result, cur, n);
+            return result;
+        }
+
+        private void nqueensHelper(List<List<Integer>> result, List<Integer> cur, int n){
+            if(cur.size() == n){
+                result.add(new ArrayList<>(cur));
+                return;
+            }
+            for(int i = 0; i<n; i++){
+                if(nqueenVaild(cur, i)){
+                    cur.add(i);
+                    nqueensHelper(result, cur, n);
+                    cur.remove(cur.size() - 1);
+                }
+            }
+        }
+
+        private boolean nqueenVaild(List<Integer>cur, int i){
+            for(int temp = 0; temp < cur.size(); temp++){
+                if(cur.get(temp) == i || Math.abs(cur.get(temp) - i) == cur.size() - temp){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
 }

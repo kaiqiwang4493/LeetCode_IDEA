@@ -11,11 +11,12 @@ public class test {
 
 
        DFS dfs = new DFS();
-       String input = "25525511135";
-       List<String> output = dfs.restoreIP(input);
-       for(String temp : output){
-           System.out.println(temp);
+       int input = 231;
+       String[] output = dfs.combiantionsTelephone1(input);
+       for (String each : output){
+           System.out.print(each + " ");
        }
+
 
 
 //       String string = "bb";

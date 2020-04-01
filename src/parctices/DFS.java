@@ -443,7 +443,9 @@ public class DFS {
         /*
         Restore IP address
         solution: each layer has three branch. Each branch represents the different position of dot.
-        finlly n == 4, we need to check the rest part of number . We drop the result if the rest part number > 255.
+        finally n == 4, we need to check the rest part of number . We drop the result if the rest part number > 255.
+        After inserting ".", we also need to check the part value of the number before inserted dot.
+        I use IPvalid to check
          */
 
         public List<String> restoreIP(String ip){
@@ -460,7 +462,7 @@ public class DFS {
         private void restoreIPHelper(List<String> result, StringBuilder sb, int level, int insertPosition){
             if(level == 3){
                 String subString = sb.substring(insertPosition - 1);
-                if(IPvaild(subString)){
+                if(IPvalid(subString)){
                     result.add(new String(sb.toString()));
                 }
                 return;
@@ -468,7 +470,7 @@ public class DFS {
 
             for(int i= insertPosition; i < insertPosition + 3 && i < sb.length(); i++){
                 sb.insert(i, ".");
-                if(IPvaild(sb.substring(insertPosition - 1, i))){
+                if(IPvalid(sb.substring(insertPosition - 1, i))){
                     restoreIPHelper(result, sb, level + 1, i + 2);
                 }
 
@@ -476,17 +478,104 @@ public class DFS {
             }
         }
 
-        private boolean IPvaild(String string){
-            if(string.length() < 3){
-                return true;
+        private boolean IPvalid(String string){
 
-            }else if(string.length() == 3){
-                int result = string.compareTo("255");
-                return result <= 0;
-            }else{
+            int m = string.length();
+            if (m > 3)
                 return false;
-            }
+            // there is OK a single 0 or single one.
+            return (string.charAt(0) != '0') ? (Integer.valueOf(string) <= 255) : (m == 1);
 
+
+//            if(string.length() < 3){
+//                if(string.charAt(0) == '0'){
+//                    return false;
+//                }else if(string.length()  == 1 && )
+//                return true;
+//
+//            }else if(string.length() == 3){
+//                int result = string.compareTo("255");
+//                return result <= 0;
+//            }else{
+//                return false;
+//            }
+
+        }
+
+        /*
+        Combinations For Telephone Pad 1
+        solution: using a HashMap to store the each number represents the letters.
+                 Then for each number in input, check the map.
+        Assumption: the given number >= 0
+         */
+
+        public String[] combinationsTelephone1(int number){
+            List<String> result = new ArrayList<>();
+            // we change the int input to List and remove the 0 and 1.
+            List<Integer> input = getNumberList(number);
+            String ALPHABET = new String("abcdefghijklmnopqrstuvwxyz");
+            HashMap<Integer, Integer> map = getNumberLetter();
+            StringBuilder sb = new StringBuilder();
+            CombinationsTelephone1Helper(result, sb, input, ALPHABET, map, 0);
+            String[] finalResult = new String[result.size()];
+            for (int i = 0; i < result.size(); i++) {
+                finalResult[i] = result.get(i);
+            }
+            return finalResult;
+        }
+
+        private void CombinationsTelephone1Helper(List<String> result, StringBuilder sb, List<Integer> input, String ALPHABET, HashMap<Integer, Integer> map, int level){
+            if(level == input.size()){
+                result.add(new String(sb.toString()));
+                return;
+            }
+                int temp = input.get(level);
+                if( temp!= 7 && temp != 9){
+                    for (int i = 0; i < 3; i++) {
+                        int letterPostion = map.get(temp) + i;
+                        char addChar = ALPHABET.charAt(letterPostion);
+                        sb.append(addChar);
+                        CombinationsTelephone1Helper(result, sb, input, ALPHABET, map, level + 1);
+                        sb.deleteCharAt(sb.length() - 1);
+                    }
+                }else{
+                    for (int i = 0; i < 4; i++) {
+                        int letterPostion = map.get(temp) + i;
+                        char addChar = ALPHABET.charAt(letterPostion);
+                        sb.append(addChar);
+                        CombinationsTelephone1Helper(result, sb, input, ALPHABET, map, level + 1);
+                        sb.deleteCharAt(sb.length() - 1);
+                    }
+                }
+
+            
+        }
+
+        private List<Integer> getNumberList(int number){
+            List<Integer> result = new LinkedList<>();
+            // we need insert the number from the front of List
+            while(number != 0){
+                if (number % 10 != 1 && number % 10 != 0) {
+                    result.add(0, number % 10);
+                }
+                number = number / 10;
+            }
+            return result;
+        }
+
+        private  HashMap<Integer, Integer>  getNumberLetter(){
+            HashMap<Integer, Integer> map = new HashMap<>();
+            int position = 0;
+            for (int i = 2; i < 10; i++) {
+                map.put(i, position);
+                if(i == 7){
+                    position += 4;
+                }else{
+                    position += 3;
+                }
+
+            }
+            return map;
         }
 
 

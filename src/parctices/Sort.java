@@ -86,7 +86,32 @@ public class Sort {
 
     }
 
+    /*
+    Rainbow Sort
+     */
 
+    public int[] rainbowSort(int[] array){
+        if(array == null || array.length <= 1){
+            return array;
+        }
+
+        int i = 0;
+        int j = 0;
+        int k = array.length - 1;
+        while(j <= k){
+            if(array[j] == -1){
+                arraySwap(array, i, j);
+                i++;
+                j++;
+            }else if(array[j] == 0){
+                j++;
+            }else{
+                arraySwap(array,j, k);
+                k--;
+            }
+        }
+        return array;
+    }
 
 
 

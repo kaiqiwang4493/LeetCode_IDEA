@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class test {
+
     public static void main(String[] args) {
+       int[] array = {0,1,1,0,0,-1,-1,1,0};
+       Sort sort = new Sort();
+       sort.rainbowSort(array);
+        for (int value : array) {
+            System.out.print(value + "   ");
+        }
 
-
-       DFS dfs = new DFS();
-       int input = 231;
-       String[] output = dfs.combiantionsTelephone1(input);
-       for (String each : output){
-           System.out.print(each + " ");
        }
 
 
@@ -48,7 +49,7 @@ public class test {
 //        System.out.println(builder.toString());
 //        builder.deleteCharAt(1);
 //        System.out.println(builder.toString());
-    }
+
 
     public static void show2Darray(int[][] array){
         int N = array.length;

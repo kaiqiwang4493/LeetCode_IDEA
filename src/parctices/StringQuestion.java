@@ -154,6 +154,94 @@ public class StringQuestion {
 
         }
 
+        /*
+        Reverse Words in A Sentence I
+        I love Google -> Google love I
+        solution: 1. We need to create a method that can reverse all element in a part of char[].
+                         the parameters is array, left-end and right-end.
+                  2. Reverse the whole String first. then use Slide window to pick up the words then revers them.
+         */
+
+        public String reverseWords1(String input){
+            if(input == null || input.length() <= 1){
+                return input;
+            }
+            char[] array= input.toCharArray();
+            //reverse the whole input string.
+            reverseWhole(array, 0, array.length - 1);
+
+            //initialize the slide window
+            int slow = 0;
+            int fast = 0;
+            while(fast < array.length){
+                if(fast == array.length - 1){
+                    reverseWhole(array, slow, fast);
+                }
+                if(array[fast] == ' '){
+                    reverseWhole(array, slow, fast -1);
+                    slow = fast + 1;
+                }
+                fast++;
+            }
+            return new String(array);
+        }
+
+        private void reverseWhole(char[] array, int left, int right){
+            while(left < right){
+                char temp = array[left];
+                array[left] = array[right];
+                array[right] = temp;
+                left++;
+                right--;
+            }
+        }
+
+        /*
+        Reverse Words in A Sentence II
+        Tunrcate all heading trailing and duplicate space characters.
+         */
+        public String reverserWords2(String input){
+            if(input == null|| input.length() == 0){
+                return input;
+            }
+            char[] array = input.toCharArray();
+
+            return reverseWords1(removeSpaces(array));
+        }
+        public String removeSpaces(char[] array){
+            int slow = -1;
+            int fast = 0;
+            while(array[fast] == ' '){
+                fast++;
+            }
+
+            while(fast < array.length){
+                if(array[fast] != ' '){
+                    slow++;
+                    array[slow] = array[fast];
+                    //charArraySwap(array, slow, fast);
+                    if(fast + 1 < array.length  -1 && array[fast + 1] == ' '){
+                        fast++;
+                        slow++;
+                        array[slow] = array[fast];
+                        //charArraySwap(array, slow, fast);
+                    }
+                }
+                fast++;
+            }
+            if(array[slow] == ' ') {
+                return new String(array,0, slow);
+            }else{
+                return new String(array, 0, slow + 1);
+            }
+
+        }
+
+        private void charArraySwap(char[] array, int left, int right){
+            char temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+        }
 
 
 }

@@ -9,12 +9,12 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args) {
-       int[] array = {0,1,1,0,0,-1,-1,1,0};
-       Sort sort = new Sort();
-       sort.rainbowSort(array);
-        for (int value : array) {
-            System.out.print(value + "   ");
-        }
+       StringQuestion sq = new StringQuestion();
+       String string = "  a";
+        System.out.println(string);
+        char[] array = string.toCharArray();
+        System.out.println("remove:"+sq.removeSpaces(array));
+        System.out.println(sq.reverserWords2(string));
 
        }
 

@@ -208,6 +208,7 @@ public class StringQuestion {
 
             return reverseWords1(removeSpaces(array));
         }
+
         public String removeSpaces(char[] array){
             int slow = -1;
             int fast = 0;
@@ -224,17 +225,18 @@ public class StringQuestion {
                         fast++;
                         slow++;
                         array[slow] = array[fast];
-                        //charArraySwap(array, slow, fast);
                     }
                 }
                 fast++;
             }
+            // If the last element is not space, the number of return string is slow + 1(because the first index of array is 0).
+            // the slow may includes the space if the last the character is space.
+            //Because of array[fast] == ' ' and fast + 1 =array.length.
             if(array[slow] == ' ') {
                 return new String(array,0, slow);
             }else{
                 return new String(array, 0, slow + 1);
             }
-
         }
 
         private void charArraySwap(char[] array, int left, int right){
@@ -243,6 +245,32 @@ public class StringQuestion {
             array[right] = temp;
         }
 
+
+        /*
+        * Longest Substring With Only Unique Characters.
+         */
+
+        public int longestSubstring(String input){
+            if(input == null || input.length() <= 1){
+                return 0;
+            }
+            char[] array = input.toCharArray();
+            int right = 0;
+            int left = 0;
+            Set<Character> set = new HashSet<>();
+            int result = 0;
+
+            while(right < array.length){
+                if(set.add(array[right])){
+                    result = Math.max(result, right - left + 1);
+                    right++;
+                }else{
+                    set.remove(array[left]);
+                    left++;
+                }
+            }
+            return result;
+        }
 
 }
 

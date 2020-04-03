@@ -10,11 +10,11 @@ public class test {
 
     public static void main(String[] args) {
        StringQuestion sq = new StringQuestion();
-       String string = "  a";
+       String string = "";
         System.out.println(string);
         char[] array = string.toCharArray();
-        System.out.println("remove:"+sq.removeSpaces(array));
-        System.out.println(sq.reverserWords2(string));
+        System.out.println("longest: " + sq.longest(string));
+
 
        }
 

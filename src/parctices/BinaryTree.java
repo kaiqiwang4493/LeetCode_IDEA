@@ -173,6 +173,23 @@ public class BinaryTree {
         return root;
     }
 
+    //Time : O(n)
+    //Space : O(height)
+    public boolean isBST2(TreeNode root){
+        return isBSTHelper(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private boolean isBSTHelper(TreeNode root, Integer lBound, Integer rBound){
+        if(root == null){
+            return true;
+        }
+        //child value cannot equal to parent value.
+        if(root.key <= lBound || root.key >= rBound){
+            return false;
+        }
+        return isBSTHelper(root.left, lBound, root.key) && isBSTHelper(root.right, root.key, rBound);
+    }
+
     public boolean isBST(TreeNode root){
         if(root == null){
             return true;
@@ -187,7 +204,7 @@ public class BinaryTree {
         if(root.left != null){
             TreeNode leftSide = root.left;
             while(leftSide!= null){
-                if(leftSide.key >= root.key){
+                if(leftSide. key >= root.key){
                     return false;
                 }
                 // make sure that the biggest node in left is bigger than root
@@ -254,6 +271,9 @@ public class BinaryTree {
     /*
     Lowest Common Ancestor IV
     Given K nodes in a binary tree, find their lowest common ancestor.
+    Because we don't want to change the original tree, so we new the TreeNode: leftReturn, rightReturn.
+    We can see the removeEmptyNode(TreeNode root) method, which we have to chang the original tree.
+    So we cannot new TreeNode in removeEmptyNode(TreeNode root) method.
      */
 
     public TreeNode lowestCommonAncestor4(TreeNode root, List<TreeNode> nodes){
@@ -387,5 +407,24 @@ public class BinaryTree {
            result = Math.abs(target - result) < Math.abs(target - rightResult)? result: rightResult;
        }
        return result;
+    }
+
+    //remove the all nodes just have one child.
+    //caution: we cannot new a leftNode and rightNode, we have to change the values of original root.left and root.right
+    public TreeNode removeEmptyNode(TreeNode root){
+        if(root == null){
+            return root;
+        }
+
+        root.left = removeEmptyNode(root.left);
+        root.right = removeEmptyNode(root.right);
+
+      if(root.left != null && root.right != null){
+          return root;
+      }else if(root.left == null&& root.right == null){
+          return root;
+      }else {
+          return root.left != null ? root.left : root.right;
+      }
     }
 }

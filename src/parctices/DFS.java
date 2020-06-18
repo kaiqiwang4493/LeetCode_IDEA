@@ -1,6 +1,8 @@
 package parctices;
 
-import java.awt.desktop.SystemEventListener;
+import dataStructure.Node;
+import dataStructure.TreeNode;
+
 import java.util.*;
 import java.lang.String;
 
@@ -46,10 +48,10 @@ public class DFS {
         int left = 0;
         int right = 0;
         StringBuilder sb = new StringBuilder();
-        validParenthesesHelper(result, sb, left, right, n);
-        return result;
+       return  validParenthesesHelper(result, sb, left, right, n);
+        //return result;
     }
-    private void validParenthesesHelper(List<java.lang.String> result, StringBuilder sb, int left, int right, int n){
+    private List<String> validParenthesesHelper(List<java.lang.String> result, StringBuilder sb, int left, int right, int n){
         if(right == n && left == n){
             result.add(sb.toString());
         }
@@ -65,6 +67,7 @@ public class DFS {
             validParenthesesHelper(result, sb, left, right + 1, n);
             sb.deleteCharAt(sb.length() - 1);
         }
+        return result;
     }
 
     /*
@@ -103,6 +106,9 @@ public class DFS {
         }
 
     }
+
+
+
 
     /*
      All Permutations I
@@ -252,6 +258,7 @@ public class DFS {
     /*
     *Solution: 1.find the all combination of the origin array
     *           2. use other method to check whether the result is legal. If legal then return result.
+    *              we check the correction when we meet the first element of value. We check the forward value. Look right side.
      */
 
     public int[] keepDistance(int k){
@@ -318,6 +325,55 @@ public class DFS {
         array[k] = temp;
     }
 
+    //solution2
+    // we check the correction when we add the second one of this value.
+    // We check the backward value. Look left side.
+    public int[] keepDistance2(int k) {
+        if(k == 0){
+            return null;
+        }
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int i = 1; i <= k; i++) {
+            map.put(i, 2);
+        }
+        List<Integer> tmpResult = new ArrayList<>();
+        keepDistance2Helper(tmpResult, map, k, 0);
+        int[] result = new int [2*k];
+        if(tmpResult.size() == 0){
+            return null;
+        }
+        for (int i = 0; i < 2*k; i++) {
+             result[i] = tmpResult.get(i);
+        }
+        return result;
+    }
+
+    private void keepDistance2Helper(List<Integer> tmpResult, Map<Integer, Integer> map, int k, int index){
+        if(index == 2 * k){
+            return;
+        }
+        for (int i = 1; i <= k ; i++) {
+            boolean addFlag = false;
+            if(map.get(i) == 2){
+                addFlag = true;
+            }else if(map.get(i) == 1){
+                if(index - i - 1 >=0 && tmpResult.get(index - i - 1) == i){
+                    addFlag = true;
+                }
+            }
+            if(addFlag){
+                tmpResult.add(i);
+                map.put(i, map.get(i) -1);
+                keepDistance2Helper(tmpResult, map, k, index + 1);
+                if(tmpResult.size() == 2 * k){
+                    return;
+                }else{
+                    map.put(i, map.get(i) + 1);
+                    tmpResult.remove(tmpResult.size() - 1);
+                }
+            }
+        }
+    }
 
     /*
     *Given a string with possible duplicate characters, return a list with all permutations of the characters.
@@ -395,7 +451,6 @@ public class DFS {
             result.add(new ArrayList<>(temp));
             return;
         }
-
         for(int i = start; i <= target; i++){
 
             if(target%i == 0){
@@ -409,6 +464,7 @@ public class DFS {
     /*
         N   Queen
         Assume : N >0
+        time:O(n!*n)
      */
         public List<List<Integer>> nqueens(int n){
             List<List<Integer>> result = new ArrayList<>();
@@ -447,6 +503,43 @@ public class DFS {
         After inserting ".", we also need to check the part value of the number before inserted dot.
         I use IPvalid to check
          */
+
+        public List<String> restorIP2(String ip){
+            if(ip.length() < 4 || ip.length() > 12){
+                return null;
+            }
+            StringBuilder sb = new StringBuilder(ip);
+            List<String> result = new ArrayList<>();
+            restorIP2Helper(result, sb, 0, 1);
+            return result;
+        }
+
+        private void restorIP2Helper(List<String> result, StringBuilder sb, int level, int insert){
+            if(level == 4){
+                if(IPvalid2(sb.substring(insert-1))){
+                    result.add(new String(sb));
+                }
+                return;
+            }
+            for (int i = insert; i <insert + 3 ; i++) {
+                sb.insert(i, '.');
+                if(IPvalid2(sb.substring(insert - 1, i))) {
+                    restorIP2Helper(result, sb, level + 1, i + 2);
+                }
+                sb.deleteCharAt(i);
+            }
+
+        }
+
+        private boolean IPvalid2(String string){
+            int m = string.length();
+            if(m > 3){
+                return false;
+            }
+            return string.charAt(0)=='0' ? m==1 : (Integer.valueOf(string) <= 255);
+        }
+
+
 
         public List<String> restoreIP(String ip){
             if (ip.length() < 4 || ip.length() > 12){
@@ -548,7 +641,7 @@ public class DFS {
                     }
                 }
 
-            
+
         }
 
         private List<Integer> getNumberList(int number){
@@ -578,5 +671,357 @@ public class DFS {
             return map;
         }
 
+       public TreeNode reverseTree(TreeNode root){
+            if(root == null || root.left == null){
+                return root;
+            }
+            TreeNode newHead = reverseTree(root.left);
+            root.left.left = root.right;
+            root.left.right = root;
+            root.left = null;
+            root.right = null;
+            return newHead;
+       }
+
+
+
+    public String decodeString(String s) {
+        if(s == null || s.length() == 0){
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        decodeStringHelper(s, sb, 0 ,0);
+        return sb.toString();
+    }
+
+    private void decodeStringHelper(String s, StringBuilder sb, int index, int number){
+            if(index == s.length()){
+                return;
+            }
+
+            char tmp = s.charAt(index);
+            if(tmp >= '0' && tmp <='9'){
+                if(number == 0){
+                    number = tmp - '0';
+                    while(s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' ) {
+                        tmp = s.charAt(index + 1);
+                        number = number * 10 + (tmp - '0');
+                        index++;
+                    }
+                    decodeStringHelper(s, sb, index + 1, number);
+                }else{
+                    int innerNumber = tmp - '0';
+                    while(s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' ) {
+                        tmp = s.charAt(index + 1);
+                        innerNumber = innerNumber * 10 + (tmp - '0');
+                        index++;
+                    }
+                    decodeStringHelper(s, sb, index + 1, innerNumber);
+                }
+                int numberRightBacket = 0;
+                while(s.charAt(index)!= ']' || numberRightBacket != 0){
+                    index++;
+                    if(s.charAt(index) == '['){
+                        numberRightBacket++;
+                    }
+                    if(s.charAt(index) == ']'){
+                        numberRightBacket--;
+                    }
+                }
+                number = 0;
+                decodeStringHelper(s, sb, index + 1, number);
+            }else if(tmp == '[' && number != 0){
+                for (int i = 0; i < number; i++) {
+                    decodeStringHelper(s, sb, index + 1, number);
+                }
+            }else if(tmp == ']'){
+                return;
+            }else{
+                // the tmp is letter
+                sb.append(tmp);
+                decodeStringHelper(s, sb, index + 1, number);
+            }
+
+    }
+
+    public List<String> findItinerary(List<List<String>> tickets){
+            List<String> result = new ArrayList<>();
+            if(tickets==null || tickets.size() == 0){
+                return result;
+            }
+            result.add("JFK");
+            HashMap<String, List<String>> map = getAirportMap(tickets);
+            findItineraryHelper(result,map,"JFK", tickets.size() + 1);
+            return result;
+    }
+
+    public HashMap<String, List<String>> getAirportMap(List<List<String>> tickets){
+        HashMap<String, List<String>> finalResult = new HashMap<>();
+        for(List<String> ticket : tickets){
+            String start = ticket.get(0);
+            String destination = ticket.get(1);
+            if(finalResult.containsKey(start)){
+                finalResult.get(start).add(destination);
+            }else{
+                List<String> destinations = new ArrayList<>();
+                destinations.add(destination);
+                finalResult.put(start, destinations);
+            }
+        }
+        return finalResult;
+    }
+
+    private void findItineraryHelper(List<String> result,HashMap<String, List<String>> map, String start, int length){
+        if (result.size() == length) {
+            return;
+        }
+        if (map.containsKey(start) && map.get(start).size() != 0) {
+            List<String> destinations = map.get(start);
+            List<String> list = new ArrayList<>(map.get(start));
+            Collections.sort(list);
+            for (String transit : list) {
+                destinations.remove(transit);
+                start = transit;
+                result.add(transit);
+                findItineraryHelper(result, map, start, length);
+                if (result.size() == length) return;
+                result.remove(result.size() - 1);
+                destinations.add(transit);
+            }
+        }
+
+    }
+
+
+    public int findCircleNum(int[][] M){
+        if (M == null || M.length == 0) {
+            return 0;
+        }
+        int number = 0;
+        for (int i = 0; i < M.length; i++) {
+            for (int j = 0; j < M.length; j++) {
+                if (M[i][j] == 1) {
+                    number++;
+                    findCircleNumHelper(M, i);
+                }
+            }
+        }
+        return number;
+    }
+
+    private void findCircleNumHelper(int[][] M, int start) {
+        M[start][start] = 0;
+        for (int i = 0; i < M.length; i++) {
+            if (M[start][i] == 1) {
+                M[start][i] = 0;
+                M[i][start] = 0;
+                findCircleNumHelper(M, i);
+            }
+        }
+    }
+
+    public int maxDepth(Node root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int max = 0;
+        if (root.children == null || root.children.size() == 0) {
+            return 1;
+        }
+        for (int i = 0; i < root.children.size(); i++) {
+            int tmpLength = maxDepth(root.children.get(i));
+            max = Math.max(max, tmpLength);
+        }
+        return max + 1;
+    }
+
+
+    public int findPaths(int m, int n, int N, int i, int j) {
+        if(m == 0 || n == 0 || N == 0){
+            return 0;
+        }
+
+        return helper(m, n, N, i, j, 0);
+    }
+
+    private int helper(int m, int n, int N, int i, int j ,int step) {
+        if (i < 0 || j < 0 || i == m || j == n) {
+            return 1;
+
+        }
+        if (step ==  N ) {
+            return 0;
+        }
+
+        int up = helper(m, n, N, i - 1, j,step + 1);
+        int down = helper(m, n, N, i + 1, j,step +1  );
+        int left = helper(m, n, N, i, j - 1,step +1);
+        int right = helper(m, n, N, i, j + 1,step +1);
+        return up + down + left + right;
+    }
+
+    /*Rreconstruct Binary tree with Preorder  And Inorder
+        we do not need the int[] inorder because we has used map to replace it.
+        we still need left and right index in inorder due to we have to use those two numbers to calculate the length of
+        left child and right child.
+     */
+    public TreeNode buildTree1(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length ==0||inorder.length == 0 || inorder.length != preorder.length){
+            return null;
+        }
+        Map<Integer, Integer> map = getInorderMap(inorder);
+        return buildTree1Helper(map, preorder,0, preorder.length - 1, 0, inorder.length - 1);
+    }
+
+    private Map<Integer,Integer> getInorderMap(int[] inorder){
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i], i);
+        }
+        return map;
+    }
+
+    private TreeNode buildTree1Helper(Map<Integer, Integer> map, int[] preorder, int preleft, int preright, int inleft, int inright){
+        if(inleft > inright){
+            return null;
+        }
+
+        TreeNode root = new TreeNode(preorder[preleft]);
+        int inmid = map.get(root.key);
+
+        root.left = buildTree1Helper(map, preorder, preleft + 1, preleft + (inmid-inleft), inleft, inmid- 1);
+        root.right = buildTree1Helper(map, preorder, preleft + (inmid - inleft) + 1, preright, inmid + 1, inright);
+        return root;
+    }
+
+    /*
+    Rreconstruct Binary tree with Postorder  And Inorder
+     */
+
+    public TreeNode buildTree2(int[] inorder, int[] postorder) {
+        if(inorder == null || postorder == null || inorder.length == 0 || postorder.length ==0 || postorder.length != inorder.length){
+            return null;
+        }
+        Map<Integer, Integer> map = getInorderMap(inorder);
+        return buildTree2Helper(postorder, map, 0, inorder.length - 1, 0, postorder.length - 1);
+    }
+
+    private TreeNode buildTree2Helper(int[] postorder, Map<Integer,Integer> map, int inleft, int inright, int postleft, int postright){
+        if(inleft > inright){
+            return null;
+        }
+        int inmid = map.get(postorder[postright]);
+        TreeNode root = new TreeNode(postorder[postright]);
+        root.left = buildTree2Helper(postorder, map, inleft, inmid - 1, postleft, postright - (inright - inmid) - 1);
+        root.right = buildTree2Helper(postorder, map, inmid + 1, inright, postright-(inright - inmid), postright - 1);
+        return root;
+    }
+
+    /*
+    Course Schedule II
+    There are a total of n courses you have to take, labeled from 0 to n-1.
+    Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+    Given the total number of courses and a list of prerequisite pairs, return the ordering of courses you should take to finish all courses.
+    There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.
+     */
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (numCourses == 0){
+            return new int[0];
+        }
+        int[] courses = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            courses[i] = i;
+        }
+        int[] result = findOrderHelper(courses, numCourses, prerequisites, 0);
+        if(result == null){
+            return new int[0];
+        }else{
+            return result;
+        }
+    }
+
+    private int[] findOrderHelper(int[] courses, int numCourses, int[][] prerequisites, int level) {
+        if (level == numCourses) {
+            if (checkAvliable(courses, prerequisites)) {
+                return courses;
+            } else {
+                return null;
+            }
+        }
+
+        for (int i = level; i < courses.length; i++) {
+            intSwap(courses, level, i);
+            int[] result = findOrderHelper(courses, numCourses, prerequisites, level + 1);
+            if (result != null) {
+                return result;
+            }
+            intSwap(courses, level, i);
+        }
+        return null;
+    }
+
+    private boolean checkAvliable(int[] courses, int[][] prerequisites) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < courses.length; i++) {
+            list.add(courses[i]);
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            if(list.indexOf(prerequisites[i][0]) < list.indexOf(prerequisites[i][1])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public List<Integer> distanceK(TreeNode  root, TreeNode target, int K){
+        List<Integer> ans = new LinkedList<>();
+        distanceKHelper(root, target, ans, K);
+        return ans;
+    }
+
+    // the return value is the distance between the root and target. -1 means we cannot find target yet.
+    private int distanceKHelper(TreeNode root, TreeNode target, List<Integer> ans, int K){
+        if(root == null){
+            return -1;
+        }else if(root ==target){
+            subtree_add(ans, root, 0, K);
+            return 1;
+        }else{
+            int L =distanceKHelper(root.left, target, ans, K);
+            int R = distanceKHelper(root.right, target, ans, K);
+            if(L != -1) {
+                if (L == K) {
+                    ans.add(root.key);
+                }else {
+                    subtree_add(ans, root.right, L + 1, K);
+                }
+                return L + 1;
+            }else  if( R != -1){
+                if( R == K){
+                    ans.add(root.key);
+                }else{
+                    subtree_add(ans, root.left, R + 1, K);
+                }
+                return R + 1;
+            }else{
+                return - 1;
+            }
+        }
+    }
+
+    private void subtree_add(List<Integer> ans,TreeNode root, int dist, int K){
+        if(root == null){
+            return;
+        }
+        if(dist == K){
+            ans.add(root.key);
+        }else{
+            subtree_add(ans, root.left, dist + 1, K);
+            subtree_add(ans, root.right, dist + 1, K);
+        }
+    }
 
 }

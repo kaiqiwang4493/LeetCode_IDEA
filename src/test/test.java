@@ -1,20 +1,62 @@
 package test;
 
+import dataStructure.TreeNode;
 import parctices.*;
 
+import javax.lang.model.element.NestingKind;
 import javax.management.MBeanServerFactory;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class test {
 
     public static void main(String[] args) {
-       StringQuestion sq = new StringQuestion();
-       String string = "";
-        System.out.println(string);
-        char[] array = string.toCharArray();
-        System.out.println("longest: " + sq.longest(string));
+        DFS dfs = new DFS();
+        int[] result = dfs.keepDistance2(4);
+        if(result == null) {
+            System.out.println("NUll");
+        }else {
+            for (int i = 0; i < result.length; i++) {
+                System.out.print(result[i] + " ");
+            }
+        }
 
+
+
+//        System.out.println(tickets);
+//        System.out.println();
+//        HashMap<String, PriorityQueue<String>> result = dfs.getAirportMap(tickets);
+//        System.out.println(result);
+//        System.out.println();
+
+//        List<String> trip = dfs.findItinerary(tickets);
+//        System.out.println(trip);
+       // showMethodString(dfs.subSets1(input));
+        System.out.println("End");
+//        TreeNode root1 = new TreeNode(10);
+//        TreeNode root2 = new TreeNode(5);
+//        TreeNode root3 = new TreeNode(6);
+//        TreeNode root4 = new TreeNode(7);
+//        TreeNode root5 = new TreeNode(8);
+//        TreeNode root6 = new TreeNode(1);
+//        TreeNode root7 = new TreeNode(2);
+//        TreeNode root8 = new TreeNode(11);
+//        TreeNode root9 = new TreeNode(9);
+//
+//        root3.left = root9;
+//        root4.left = root6;
+//        root4.right = root7;
+//        root2.left = root4;
+//        root1.left = root2;
+//        root5.right = root8;
+//        root3.right = root5;
+//        root1.right = root3;
+//
+//        BinaryTree bt = new BinaryTree();
+//        List<Integer> before = bt.InOrderTraversal2(root1);
+//        System.out.println(before);
+//        TreeNode result = bt.removeEmptyNode(root1);
+//        List<Integer> after = bt.InOrderTraversal2(result);
+//        System.out.println(after);
 
        }
 

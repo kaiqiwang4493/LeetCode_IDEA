@@ -10,16 +10,10 @@ import java.util.*;
 public class test {
 
     public static void main(String[] args) {
-        DFS dfs = new DFS();
-        int[] result = dfs.keepDistance2(4);
-        if(result == null) {
-            System.out.println("NUll");
-        }else {
-            for (int i = 0; i < result.length; i++) {
-                System.out.print(result[i] + " ");
-            }
-        }
-
+       DynamicProgramming dp = new DynamicProgramming();
+       int[] array = {1,2,3,4, 1, -10, -8, -2, 10,};
+        System.out.println(dp.fingBiggestSubarray(array));
+        System.out.println("END");
 
 
 //        System.out.println(tickets);

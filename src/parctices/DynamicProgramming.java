@@ -496,6 +496,95 @@ public class DynamicProgramming {
     Given a matrix that contains integers, find the submatrix with the largest sum.
     Return the sum of the submatrix.
      */
+    public int largest1(int[][] matrix){
+        if(matrix == null || matrix.length == 0){
+            return 0;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] tb = TB2(matrix);
+        int Max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j <= i; j++) {
+                int[] array = new int[n];
+                for (int k = 0; k < n; k++) {
+                    array[k] = tb[i][k] - tb[j][k] + matrix[j][k];
+                }
+                int tmp = fingBiggestSubarray(array);
+                Max = Math.max(Max, tmp);
+            }
+        }
+        return Max;
+    }
+
+    private int[][] TB2(int[][] matrix){
+        if(matrix == null || matrix.length == 0){
+            return null;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] tb = new int[m][n];
+        for (int i = 0; i <m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(i == 0){
+                    tb[i][j] = matrix[i][j];
+                }else{
+                    tb[i][j] = tb[i-1][j] + matrix[i][j];
+                }
+            }
+        }
+        return tb;
+    }
+
+    public int fingBiggestSubarray(int[] array){
+        if(array == null || array.length == 0){
+            return 0;
+        }
+        int pre = 0;
+        int Max = Integer.MIN_VALUE;
+        for (int i = 0; i < array.length; i++) {
+            if(i ==0 || pre < 0){
+                pre = array[i];
+            }else{
+                pre = pre + array[i];
+            }
+            Max = Math.max(Max, pre);
+        }
+        return Max;
+    }
+
+
+
+    /*
+    Dictionary Word I
+     */
+
+    public boolean canBreakReview(String input, String[] dict){
+        if(dict == null || input == null || input.length() == 0){
+            return false;
+        }
+        boolean[] M = new boolean[input.length() + 1];
+        M[0] = true;
+        for (int i = 1; i < M.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if(dictContain(dict, input.substring(j, i)) && M[j]){
+                    M[i] = true;
+                    break;
+                }
+            }
+        }
+        return M[M.length - 1];
+    }
+
+    private boolean dictContain(String[] dict, String input){
+        for(String string : dict){
+            if(input.equals(string)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }

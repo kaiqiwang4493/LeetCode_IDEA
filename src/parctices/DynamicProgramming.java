@@ -1,11 +1,10 @@
 package parctices;
 
+import java.beans.BeanInfo;
 import java.lang.String;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class DynamicProgramming {
+public class DynamicProgramming<pubilc> {
 
     /*
     Max Product Of Cutting Rope
@@ -95,7 +94,7 @@ public class DynamicProgramming {
         M[0] = true;
         //the most important part is we add extra M[0]
         // thus we merge the checking whole substring and part of substring into same expression
-       for(int i = 1; i< array.length; i++){
+       for(int i = 1; i< M.length; i++){
            for(int j = 0; j < i; j++){
                if(set.contains(input.substring(j, i)) && M[j]){
                    M[i] = true;
@@ -143,7 +142,7 @@ public class DynamicProgramming {
                 if(matrix[i][j] == 1){
                     int temp = Math.min(M[i-1][j-1], M[i-1][j]);
                     M[i][j] = Math.min(temp, M[i][j-1]) + 1;
-                    result = Math.max(result, M[i][j]);
+                    result =  Math.max(result, M[i][j]);
                 }
             }
         }
@@ -568,6 +567,7 @@ public class DynamicProgramming {
         M[0] = true;
         for (int i = 1; i < M.length; i++) {
             for (int j = 0; j < i; j++) {
+                //the substring includes charAt(j) and not includes charAt(i)
                 if(dictContain(dict, input.substring(j, i)) && M[j]){
                     M[i] = true;
                     break;
@@ -586,5 +586,348 @@ public class DynamicProgramming {
         return false;
     }
 
+    /*
+    Given a string s, find the longest palindromic substring in s.
+    You may assume that the maximum length of s is 1000.
+    solution: the dp[j][i] means then the substring start from index = j to index = i is or not palindromic substring.
+    so: if j - i < 2 means the length of substring is two, then if charAt[j] == charAt[i] we can say the sub string is palindromic.
+    Or: if j - i >2, we chech the smaller size of substring, dp[j + 1][i - 1] is the palindromic and charAt[j] == charAt[i], we also can say
+    the substring is palindromic.
+     */
+    public String longestPalindrome(String s) {
+        if(s == null || s.length() == 0){
+            String result = "";
+            return result;
+        }
+
+        int length = s.length();
+        int left = 0;
+        int size = 1;
+        boolean [][] dp = new boolean[length][length];
+        for(int i = 0; i < length; i++){
+            dp[i][i] = true;
+            for(int j = 0; j < i; j ++){
+                if(i - j < 2){
+                    dp[j][i] = (s.charAt(j) == s.charAt(i));
+                }else{
+                    dp[j][i] = (dp[j + 1][i - 1] && s.charAt(j) == s.charAt(i));
+                }
+                if(dp[j][i] == true && i - j + 1 > size){
+                    size = i - j + 1;
+                    left = j;
+                }
+            }
+        }
+        return s.substring(left, left + size);
+
+    }
+
+    /*
+    review the coin change;
+     */
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        if(coins == null||amount == 0|| amount < coins[0]){
+            return -1;
+        }
+        int[] dp = new int[amount + 1];
+        dp[0] = -1;
+        for (int target = 1; target <= amount; target++) {
+            int[] tmp = new int[coins.length];
+            for (int face = 0; face < coins.length; face++) {
+                if(target - coins[face] == 0){
+                    dp[target] = 1;
+                    break;
+                }else if(target - coins[face] <0){
+                    tmp[face] = -1;
+                }else{
+                    if(dp[target-coins[face]] == -1){
+                        tmp[face] = -1;
+                    }else{
+                        tmp[face] = dp[target - coins[face]] + 1;
+                    }
+                }
+            }
+            // condition that dp value has not been update
+            //that mean the target != coins[face]
+            if (dp[target] == 0) {
+                int tmpResult = -1;
+                for (int i : tmp) {
+                    if (i > 0) {
+                        if (tmpResult == -1) {
+                            tmpResult = i;
+                        } else {
+                            tmpResult = Math.min(tmpResult, i);
+                        }
+                    }
+                }
+                dp[target] = tmpResult;
+            }
+        }
+        return dp[dp.length - 1];
+
+    }
+
+
+    public boolean wordBreak(String s, List<String> wordDict){
+        Set<String> set = wordBreakGetSet(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if(set.contains(s.substring(j, i)) && dp[j]){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
+    private Set<String> wordBreakGetSet(List<String> wordDict){
+        Set<String> set = new HashSet<>();
+        for(String string : wordDict){
+            set.add(string);
+        }
+        return set;
+    }
+
+    /*
+    Maximal Rectangle
+    solution: using two for loop to decide the upper and bottom bound of rectangle. Then we calculate the difference between upper and bottom bound for each column
+    then we get a new 1D array that consist on this differents. Finally we just need get the biggest sum consist on continually same value in this array.
+    the value in the 1D array is actually the height of each column. And we have to ensure the height is the same for each column that make up the rectangle.
+    Time = O(N^2*M)
+     */
+
+
+
+    public int maximalRectangle(char[][] matrix){
+        if(matrix.length ==0) return 0;
+        int maxarea = 0;
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if(matrix[i][j] == '1'){
+                    //get the width of the bottom line.
+                    dp[i][j] = j==0 ? 1 : dp[i][j-1] + 1;
+                }
+                int width = dp[i][j];
+                for (int k = i; k >= 0 ; k--) {
+                    width = Math.min(width, dp[k][j]);
+                    // area = width * high.
+                    int area = width * (i-k+1);
+                    maxarea = Math.max(maxarea, area);
+                }
+            }
+        }
+        return maxarea;
+    }
+
+    // the Max is the size of square containing only 1. And the return value is the area of the square.
+    public int maximalSquare(char[][] matrix){
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] dp = new int[m][n];
+        int Max = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(i == 0 || j == 0){
+                    dp[i][j] = matrix[i][j] == '1'? 1 : 0;
+                }else{
+                    if(matrix[i][j] == '1'){
+                        int tmp = Math.min(dp[i- 1][j], dp[i][j - 1]);
+                        tmp = Math.min(tmp, dp[i - 1][j - 1]);
+                        dp[i][j] = tmp + 1;
+                        Max = Math.max(Max, dp[i][j]);
+                    }
+                }
+            }
+        }
+        // Max is the side length of biggest square.
+        return Max * Max;
+    }
+
+    /*
+    Decode Ways
+    Input: "12"
+    Output: 2
+    Explanation: It could be decoded as "AB" (1 2) or "L" (12).
+     */
+
+    public int numDecodings(String string){
+        if(string == null || string.length() ==0){
+            return 0;
+        }
+        int[] dp = new int[string.length()];
+        for (int index = 0; index < dp.length; index++) {
+            if(index == 0){
+                if (string.charAt(index) != '0') {
+                    dp[index] = 1;
+                }
+                continue;
+            }
+            int case1 = 0;
+            int case2 = 0;
+            //case1, keep the last two numbers as a Integer
+            if(string.charAt(index - 1)=='1' || string.charAt(index - 1) == '2' && string.charAt(index) <= '6'){
+                if(index - 2 < 0){
+                    case1 = 1;
+                }else{
+                    case1 = dp[index - 2];
+                }
+            }
+            //case2, keep the last one number as a Integer
+            if(string.charAt(index) != '0'){
+                case2 = dp[index - 1];
+            }
+            dp[index] = case1 + case2;
+        }
+        return dp[dp.length - 1];
+    }
+
+    /*
+    Longest String Chain
+    Input: ["a","b","ba","bca","bda","bdca"]
+    Output: 4
+    Explanation: one of the longest word chain is "a","ba","bda","bdca".
+     */
+
+    public int longestStrChain(String[] words){
+        int Biggest = 0;
+        if(words == null || words.length ==0){
+            return Biggest;
+        }
+        if(words.length == 1){
+            Biggest++;
+            return Biggest;
+        }
+        words = StringArrayOrder(words);
+        int[] dp = new int[words.length];
+        dp[0] = 1;
+
+        for (int i = 1; i <words.length ; i++) {
+            int maxPre = 0;
+            for (int j = i - 1; j >=0 ; j--) {
+                if(longestStrChainCheck(words[j], words[i])){
+                   maxPre = Math.max(maxPre, dp[j]);
+                }
+            }
+            if(maxPre == 0) {
+                dp[i] = 1;
+                Biggest = Math.max(Biggest, dp[i]);
+            }else{
+                dp[i] = maxPre + 1;
+                Biggest = Math.max(Biggest, dp[i]);
+            }
+        }
+        return Biggest;
+    }
+    //["ksqvsyq","ks","kss","czvh","zczpzvdhx","zczpzvh","zczpzvhx","zcpzvh","zczvh","gr","grukmj","ksqvsq","gruj","kssq","ksqsq","grukkmj","grukj","zczpzfvdhx","gru"]
+    //   1          1   2    1          1        1         2         1
+    private boolean longestStrChainCheck(String stringS, String stringL){
+        if(stringL.length() - stringS.length() != 1){
+            return false;
+        }
+        // check all the characters of short string are included in longer string.
+        for (int i = 0; i < stringS.length(); i++) {
+            int j = 0;
+            while(j < stringL.length()){
+                if(stringS.charAt(i) == stringL.charAt(j)){
+                    break;
+                }
+                j++;
+            }
+            // find a character in short string is not found in longer string. Return false.
+            if(j == stringL.length()) return false;
+        }
+        return true;
+    }
+
+    private String[] StringArrayOrder(String[] strings){
+        if(strings == null || strings.length == 0 || strings.length == 1){
+            return strings;
+        }
+        PriorityQueue<String> pq = new PriorityQueue<>( (string1, string2) ->{
+            if (string1.length() < string2.length()) return -1;
+            if(string1.length() >  string2.length()) return 1;
+            return 0;
+        });
+
+        for (int i = 0; i < strings.length; i++) {
+            pq.add(strings[i]);
+        }
+
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = pq.poll();
+        }
+        return strings;
+    }
+
+
+
+    public int lenfthOfLIS(int[] nums){
+       if(nums.length == 0){
+           return 0;
+       }
+       int[] dp = new int[nums.length];
+       int result = 1;
+        dp[0] = 1;
+        for (int i = 1; i <nums.length ; i++) {
+            for (int j = 0; j < i; j++) {
+                if(nums[i] > nums[j]){
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    result = Math.max(result, dp[i]);
+                }
+            }
+        }
+       return result;
+    }
+
+    public boolean checkSubarraySum(int[] nums, int k){
+        if(nums == null || nums.length == 0){
+            return false;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int sum = 0;
+            //if(nums[i] == k) return ;
+            for (int j = i; j < nums.length ; j++) {
+                sum += nums[j];
+                if(k != 0){
+                    if(sum % k == 0 && i!=j ) return true;
+                }else{
+                    if(sum == 0 && i!=j) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int knightDialer(int N){
+        int[][] nextPosTable = {{4,6},{6,8},{7,9},{4,8},{3,9,0},{},{1,7,0},{6,2},{1,3},{4,2}};
+        long[] countTable = new long[10];
+        for (int i = 0; i < 10; i++) {
+            countTable[i] = 1;
+        }
+
+        for (int j = 1; j < N; j++) {
+            long[] nextCountTable = new long[10];
+            for (int i = 0; i <10 ; i++) {
+                int[] nextPosList = nextPosTable[i];
+                for(int next : nextPosList){
+                    nextCountTable[next] += countTable[i];
+                }
+            }
+            countTable = nextCountTable;
+            for (int i = 0; i < 10; i++) {
+                countTable[i] %= 1_000_000_007;
+            }
+        }
+        long sum = 0;
+        for (int i = 0; i < 10; i++) {
+            sum += countTable[i];
+        }
+        return (int)(sum%1_000_000_007);
+    }
 
 }

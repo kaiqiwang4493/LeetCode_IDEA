@@ -94,7 +94,6 @@ public class Sort {
         if(array == null || array.length <= 1){
             return array;
         }
-
         int i = 0;
         int j = 0;
         int k = array.length - 1;

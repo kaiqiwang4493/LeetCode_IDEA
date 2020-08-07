@@ -1,5 +1,6 @@
 package parctices;
 
+import com.sun.source.tree.Tree;
 import dataStructure.Node;
 import dataStructure.TreeNode;
 
@@ -115,6 +116,7 @@ public class DFS {
      DFS Basic-4
     Given a string with no duplicate characters, return a list with all permutations of the characters.
     Solution: in the each level of recursion tree, swap the array[level] with other letters after array[level].
+    Time = O(n!)
      */
 
 
@@ -975,14 +977,14 @@ public class DFS {
         return true;
     }
 
-
+    /*
     public List<Integer> distanceK(TreeNode  root, TreeNode target, int K){
         List<Integer> ans = new LinkedList<>();
         distanceKHelper(root, target, ans, K);
         return ans;
     }
 
-    // the return value is the distance between the root and target. -1 means we cannot find target yet.
+    // the return value is the distance between the root and target. -1 means we haven't find target yet.
     private int distanceKHelper(TreeNode root, TreeNode target, List<Integer> ans, int K){
         if(root == null){
             return -1;
@@ -1023,5 +1025,266 @@ public class DFS {
             subtree_add(ans, root.right, dist + 1, K);
         }
     }
+
+     */
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k){
+        List<Integer> result = new ArrayList<>();
+        distanceKHelper(result, root, target, k);
+        return result;
+    }
+
+    private int distanceKHelper(List<Integer> result, TreeNode root, TreeNode target, int k){
+        if(root == null) {
+            return -1;
+        }else  if(root == target){
+            subtree_add(result, root, k);
+            return 0;
+        }else{
+            int L = distanceKHelper(result, root.left, target, k) + 1;
+            int R = distanceKHelper(result, root.right, target, k);
+            if(L != 0){
+                if(L == k){
+                    result.add(root.key);
+                } else{
+                    subtree_add(result, root.right, k - L - 1);
+                }
+                return L;
+            }else if(R != 0){
+                if(R == k){
+                    result.add(root.key);
+                }else{
+                    subtree_add(result, root.left, k - R - 1);
+                }
+                return R;
+            }
+            return -1;
+        }
+    }
+
+    private void subtree_add(List<Integer> result, TreeNode root, int k){
+       if(root == null) {
+           return;
+       }
+       if(k == 0){
+           result.add(root.key);
+           return;
+       }
+       subtree_add(result, root.left, k - 1);
+       subtree_add(result, root.right, k - 1);
+    }
+
+    /*
+    Decode Ways
+    Input: "12"
+    Output: 2
+    Explanation: It could be decoded as "AB" (1 2) or "L" (12).
+     */
+
+    public int numDecodings(String string){
+        if(string == null || string.length() == 0){
+            return 0;
+        }
+        return numDecodingsHelper(string, 0);
+    }
+
+    private int numDecodingsHelper(String string, int index){
+        if(index == string.length()){
+            return 1;
+        }
+        if(string.charAt(index)== '0'){
+            return 0;
+        }
+        int left = 0;
+        int right = 0;
+        left = numDecodingsHelper(string, index + 1);
+        if(index + 2 <= string.length() && (string.charAt(index)=='1' || string.charAt(index) == '2' && string.charAt(index + 1) <= '6')){
+            right = numDecodingsHelper(string, index + 2);
+        }
+        return left + right;
+    }
+
+
+    /*
+    Unique Binary Search Trees II
+    Given an integer n, generate all structurally unique BST's (binary search trees) that store values 1 ... n.
+     */
+    public List<TreeNode>  generateTrees(int n ){
+        if(n == 0){
+            return new LinkedList<TreeNode>();
+        }
+        return generateTreesHelper(1 ,n);
+    }
+
+    private LinkedList<TreeNode> generateTreesHelper(int start, int end){
+        LinkedList<TreeNode> all_trees = new LinkedList<>();
+        if(start > end){
+            all_trees.add(null);
+            return  all_trees;
+        }
+
+        for (int i = start; i <= end ; i++) {
+            LinkedList<TreeNode> left_trees = generateTreesHelper(start, i - 1);
+
+            LinkedList<TreeNode> right_trees = generateTreesHelper(i + 1, end);
+
+            for(TreeNode l : left_trees){
+                for(TreeNode r : right_trees){
+                    TreeNode current_tree = new TreeNode(i);
+                    current_tree.left = l;
+                    current_tree.right = r;
+                    all_trees.add(current_tree);
+                }
+            }
+        }
+        return all_trees;
+    }
+
+    /*
+    Burst Balloons
+    Given n balloons, indexed from 0 to n-1. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons.
+    If the you burst balloon i you will get nums[left] * nums[i] * nums[right] coins. Here left and right are adjacent indices of i.
+    After the burst, the left and right then becomes adjacent.
+
+    Find the maximum coins you can collect by bursting the balloons wisely.
+     */
+
+    public int maxCoins(int[] nums){
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        List<Integer> array = new LinkedList<>();
+        for(int i : nums){
+            array.add(i);
+        }
+        return maxCoinsHelper(0, 0, array);
+    }
+
+    private int maxCoinsHelper(int result, int Max, List<Integer> array){
+        if(array.size() == 0){
+            Max = Math.max(Max, result);
+            return Max;
+        }
+
+        for (int i = 0; i < array.size(); i++) {
+            int center = array.get(i);
+            int left;
+            int right;
+            if(i - 1 < 0){
+                 left = 1;
+            }else{
+                 left = array.get(i-1);
+            }
+            if(i + 1 >= array.size()){
+                 right = 1;
+            }else{
+                 right = array.get(i + 1);
+            }
+            result += center * left * right;
+            array.remove(i);
+            Max = maxCoinsHelper(result, Max, array);
+            array.add(i, center);
+            result -= center * left * right;
+        }
+        return Max;
+    }
+
+    /*
+    The Knight's Dialer
+     */
+
+    public Integer KnightDialer(int n){
+        if(n == 0){
+            return 0;
+        }
+        int[][] dialer = getDialerMap();
+        HashMap<Integer, Integer> read = new HashMap<>();
+        int[] first = {1,2,3,4,5,6,7,8,9,0};
+        int result = KnightDialerhelper(dialer, 0, n, read, 0, first);
+        return result;
+    }
+
+    private int KnightDialerhelper(int[][] dialer, int steps, int n, HashMap<Integer,Integer> readed, int level, int[] nextDials){
+        if(level == n || nextDials == null || nextDials.length == 0){
+            return readed.size();
+        }
+
+        for(int nextDial : nextDials){
+            if(!readed.containsKey(nextDial)){
+                // if the dial has not been read
+                readed.put(nextDial, 1);
+            }else{
+                //if the dial has been read
+                readed.put(nextDial, readed.get(nextDial) + 1);
+            }
+            int tmp = KnightDialerhelper(dialer, steps, n, readed, level + 1, dialer[nextDial]);
+            if(readed.get(nextDial) == 1){
+                readed.remove(nextDial);
+            }else{
+                readed.put(nextDial, readed.get(nextDial) - 1);
+            }
+            steps = Math.max(steps, tmp);
+        }
+        return steps;
+    }
+
+    public int[][] getDialerMap(){
+        int[][] matrix = {
+                {4, 6},//0
+                {6, 8},//1
+                {7, 9},//2
+                {4, 8},//3
+                {0, 3, 9},//4
+                {},//5
+                {0, 1, 7},//6
+                {2, 6},//7
+                {1, 3},//8
+                {2 ,4}//9
+        };
+        return matrix;
+    }
+
+    /*
+    the area of black retango
+     */
+    public int areaOfBlack(int[][] matrix, int[] position){
+        if(position == null){
+            return 0;
+        }
+        int x = position[0];
+        int y = position[1];
+        if(x < 0||x > matrix.length - 1 || y < 0 || y > matrix[0].length - 1 || matrix[x][y] == 0){
+            return 0;
+        }
+
+        return areaOfBlackHelper(matrix,0, x,y,x,x,y,y);
+
+    }
+
+    private int areaOfBlackHelper(int[][] matrix, int area, int x, int y, int minX, int maxX, int minY, int maxY){
+        if(matrix[x][y] == 0){
+            return area;
+        }
+        if(x<minX) minX = x;
+        if(x>maxX) maxX = x;
+        if(y<minY) minY = y;
+        if(y>maxY) maxY = y;
+        int tmpArea = (maxX - minX + 1) * (maxY - minY + 1);
+        area = Math.max(area, tmpArea);
+
+        matrix[x][y] = 0;
+        int areaD = 0, areaU = 0, areaL=0, areaR = 0;
+        if(x + 1 < matrix.length) areaD = areaOfBlackHelper(matrix, area, x + 1, y, minX, maxX, minY, maxY);
+        if(x - 1 >= 0) areaU = areaOfBlackHelper(matrix, area, x - 1, y, minX, maxX, minY, maxY);
+        if(y + 1 < matrix[x].length) areaR = areaOfBlackHelper(matrix, area, x, y + 1, minX, maxX, minY, maxY);
+        if(y - 1 >= 0) areaL = areaOfBlackHelper(matrix, area, x, y- 1, minX, maxX, minY, maxY);
+
+        int result = Math.max(areaU, areaD);
+        result = Math.max(result, areaL);
+        result = Math.max(result, areaR);
+        return result;
+    }
+
+
 
 }

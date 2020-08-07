@@ -43,4 +43,57 @@ public class BinarySearch {
         return new int[]{-1, -1};
     }
 
+    /*
+    Two sorted integer arrays, how to find the k-th smallest element from them
+    solution : binary search + recursion.
+        recursion rule : find the k/2^n elements in each array. Ans compare the largest elements in each subarray.
+        we can remove the subarray with the smaller one.
+        base case: whene the k/2^n == 0, we return the larger one.
+     */
+
+    public int kthLargest(int K, int[] array1, int[] array2){
+        if(array1 == null && array2 == null || (array1.length == 0 && array2.length == 0)){
+            return 0;
+        }
+        if(array1==null || array1.length == 0){
+            return array2[K - 1];
+        }
+        if(array2 == null || array2.length == 0){
+            return array1[K - 1];
+        }
+
+        return kthLargestHelper(array1, 0, array2, 0, K);
+    }
+
+    private int kthLargestHelper(int[] a, int aleft, int[] b, int bleft, int k){
+        if(aleft >= a.length){
+            return b[bleft + k - 1];
+        }
+        if(bleft >= b.length){
+            return a[aleft +k - 1];
+        }
+        if(k == 1){
+            return Math.min(a[aleft],b[bleft]);
+        }
+
+        int amid = aleft + k / 2 -1;
+        int bmid = bleft + k / 2 -1;
+
+        int aval = amid > a.length? Integer.MAX_VALUE : a[amid];
+        int bval = bmid > b.length? Integer.MAX_VALUE : b[bmid];
+
+        if(aval <= bval){
+            return kthLargestHelper(a, amid + 1, b, bleft, k - k /2);
+        }else{
+            return kthLargestHelper(a, aleft, b, bmid + 1, k - k / 2);
+        }
+    }
+
+    /*
+    fins the top K elements in an array that are closest to a target number?
+
+
+     */
+
+
 }

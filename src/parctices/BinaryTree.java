@@ -1,6 +1,7 @@
 package parctices;
 
 
+import dataStructure.Node;
 import dataStructure.TreeNode;
 import dataStructure.TreeNodeP;
 
@@ -62,8 +63,28 @@ public class BinaryTree {
     }
 
     /*
-    In-Order Traversal of Binary Tree (iterative)
+    Pre_Order Traversal of Binary Tree (recursion)
      */
+    public List<Integer> preOrderRecursion(TreeNode root){
+        List<Integer> result = new ArrayList<>();
+        preOrderRecursionHelper(root, result);
+        return result;
+    }
+
+    private void preOrderRecursionHelper(TreeNode root, List<Integer> result){
+        if(root == null){
+            return;
+        }
+        result.add(root.key);
+        preOrderRecursionHelper(root.left, result);
+        preOrderRecursionHelper(root.right, result);
+    }
+
+    /*
+    In-Order Traversal of Binary Tree (iterative)
+    using a stack to store the TreeNode elements in the tree.
+     */
+    /*
     public List<Integer> InOrderTraversal2(TreeNode root){
         List<Integer> list = new ArrayList<>();
         Deque<TreeNode> deque = new ArrayDeque<>();
@@ -77,6 +98,28 @@ public class BinaryTree {
                 cur = cur.left;
             }else{
                 cur = deque.pollFirst();
+                list.add(cur.key);
+                cur = cur.right;
+            }
+        }
+        return list;
+    }
+
+     */
+
+    public List<Integer> InOrderTraversal2(TreeNode root){
+        List<Integer>  list = new ArrayList<>();
+        Deque<TreeNode> dq = new ArrayDeque<>();
+        if(root == null){
+            return list;
+        }
+        TreeNode cur = root;
+        while(!dq.isEmpty() || cur != null){
+            if(cur != null){
+                dq.addFirst(cur);
+                cur = cur.left;
+            }else{
+                cur = dq.pollFirst();
                 list.add(cur.key);
                 cur = cur.right;
             }
@@ -127,6 +170,35 @@ public class BinaryTree {
             pre = cur;
         }
         return list;
+    }
+
+    /*
+    Symmetric Binary Tree
+    check if a given binary tree is symmetric
+     */
+
+    public boolean isSymmetric(TreeNode root){
+        if(root == null){
+            return true;
+        }else{
+            TreeNode left = root.left;
+            TreeNode right = root.right;
+            return isSymmetricHelper(left, right);
+        }
+    }
+
+    private boolean isSymmetricHelper(TreeNode left, TreeNode right){
+        if(left == null && right == null){
+            return true;
+        }else  if(left == null || right == null){
+            return false;
+        }else{
+            if(left.key != right.key){
+                return false;
+            }else{
+                return isSymmetricHelper(left.left, right.right) && isSymmetricHelper(left.right, right.left);
+            }
+        }
     }
 
     /*
@@ -427,4 +499,149 @@ public class BinaryTree {
           return root.left != null ? root.left : root.right;
       }
     }
+
+
+    public  boolean SymmetricTree(TreeNode left, TreeNode right){
+        if(left == null && right == null){
+            return true;
+        }else if(left == null || right ==null){
+            return false;
+        }else if(left.key != right.key){
+            return false;
+        }
+            return SymmetricTree(left.left, right.right) && SymmetricTree(left.right, right.left);
+    }
+
+    //Time O(4*log_2(n)) => O(n^2)
+    public  boolean IdenticalTree(TreeNode left, TreeNode right){
+        if(left == null && right == null){
+            return true;
+        }else if(left == null || right ==null){
+            return false;
+        }else if(left.key != right.key){
+            return false;
+        }
+        return (IdenticalTree(left.left, right.right) && IdenticalTree(left.right, right.left)) ||
+                (IdenticalTree(left.left, right.left)) && IdenticalTree(left.right, right.right);
+    }
+
+
+    public boolean isIdentical(TreeNode one, TreeNode two){
+        if(one == null && two == null){
+            return true;
+        }else if(one == null || two == null){
+            return false;
+        }else if(one.key != two.key){
+            return false;
+        }
+        return isIdentical(one.left,two.left) && isIdentical(one.right, two.right);
+
+    }
+
+    /*
+    Binary Tree Zigzag Level Order Traversal
+    Given a binary tree, return the zigzag level order traversal of its nodes' values.
+     (ie, from left to right, then right to left for the next level and alternate between).
+     */
+    public List<List<Integer>> zigzalevelOrder(TreeNode root){
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        boolean lr = true;
+        deque.addLast(root);
+
+        while(!deque.isEmpty()){
+            int length = deque.size();
+            List<Integer> tmpResult = new ArrayList<>();
+            for (int i = 0; i < length; i++) {
+                if(lr){
+                    TreeNode node = deque.pollFirst();
+                    tmpResult.add(node.key);
+                    if(node.left != null) deque.offerLast(node.left);
+                    if(node.right!= null) deque.offerLast(node.right);
+                }else{
+                    TreeNode node = deque.pollLast();
+                    tmpResult.add(node.key);
+                    if(node.right != null) deque.offerFirst(node.right);
+                    if(node.left != null) deque.offerFirst(node.left);
+                }
+            }
+            lr = !lr;
+            result.add(new ArrayList<>(tmpResult));
+        }
+        return result;
+    }
+
+
+    /*
+    Binary Tree Level Order Traversal
+     */
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.offerLast(root);
+
+        while(!deque.isEmpty()){
+            List<Integer> list = new ArrayList<>();
+            int size = deque.size();
+            for(int i = 0; i < size; i++){
+                TreeNode node = deque.pollFirst();
+                list.add(node.key);
+                if(node.left != null) deque.offerLast(node.left);
+                if(node.right != null) deque.offerLast(node.right);
+            }
+            result.add(new ArrayList<>(list));
+        }
+        return result;
+    }
+
+
+    public TreeNode trimBST(TreeNode root, int L, int R) {
+        if(root == null) return root;
+        //TreeNode newHead;
+        return trimBSTHelper(root, null, L, R);
+    }
+
+    private TreeNode trimBSTHelper(TreeNode root, TreeNode newHead, int L, int R){
+        if(root == null) return newHead;
+        if(root.key >= L && root.key <= R){
+            if(newHead == null) {
+                newHead = new TreeNode(root.key);
+            }else{
+                addNode(newHead, root.key);
+            }
+            if(root.key != L) newHead = trimBSTHelper(root.left, newHead, L, R);
+            if(root.key != R) newHead = trimBSTHelper(root.right, newHead, L, R);
+        }else if(root.key < L){
+            newHead = trimBSTHelper(root.right, newHead, L ,R);
+        }else{
+            // root.val >=R
+            newHead=trimBSTHelper(root.left, newHead, L, R);
+        }
+        return newHead;
+    }
+
+
+    private void addNode(TreeNode root, int node){
+        if(node < root.key){
+            if(root.left != null){
+                addNode(root.left, node);
+            }else{
+                root.left = new TreeNode(node);
+                return;
+            }
+        }else{
+            if(root.right != null){
+                addNode(root.right, node);
+            }else{
+                root.right = new TreeNode(node);
+                return;
+            }
+        }
+    }
+
+
 }

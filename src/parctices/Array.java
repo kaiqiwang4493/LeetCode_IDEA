@@ -110,4 +110,6 @@ public class Array {
         builder.deleteCharAt(position);
         printPermutationsHelper(builder, position + 1,length, time + 1);
     }
+
+
 }

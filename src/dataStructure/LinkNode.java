@@ -8,4 +8,16 @@ public class LinkNode {
         this.value = value;
         next = null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        LinkNode tmp = this;
+        while(tmp != null){
+            sb.append(tmp.value);
+            sb.append(" ");
+            tmp = tmp.next;
+        }
+        return sb.toString();
+    }
 }
